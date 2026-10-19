@@ -133,6 +133,41 @@ FEEDBACK_KEY=
 
 ## NGINX config
 
+### Full static cache
+
+Production runs Statamic's full static cache (`STATAMIC_STATIC_CACHING_STRATEGY=full`), which saves each page as an HTML file in `public/static`. This is Statamic's rewrite rule for it, from https://statamic.dev/static-caching: NGINX sends the saved file when there is one, without starting PHP. Without it the site still works, but every page goes through PHP.
+
+Add this __inside the server block__, in place of its existing `location /` block:
+```nginx
+set $try_location @static;
+
+if ($request_method != GET) {
+    set $try_location @not_static;
+}
+
+if ($args ~* "live-preview=(.*)") {
+    set $try_location @not_static;
+}
+
+location / {
+    try_files $uri $try_location;
+}
+
+location @static {
+    try_files /static${uri}_$args.html $uri $uri/ /index.php?$args;
+}
+
+location @not_static {
+    try_files $uri /index.php?$args;
+}
+```
+
+Each query string is cached on its own (`ignore_query_strings` is `false` in `config/statamic/static_caching.php`), so `/news?page=2` is saved as `public/static/news_page=2.html`. A site that sets `ignore_query_strings` to `true` changes the `@static` line to `try_files /static${uri}_.html $uri $uri/ /index.php?$args;`.
+
+On a site whose strategy is `null` or `half`, nothing is written to `public/static`, so every request goes on to PHP as before. Before moving a site off `full`, run `php artisan statamic:static:clear`, or NGINX keeps sending the pages already saved there.
+
+### Browser caching
+
 Add the following to your NGINX config __inside the server block__ enable static resource caching:
 ```
 expires $expires;

@@ -58,6 +58,7 @@ return [
         'class' => null,
 
         'urls' => [
+            '/llms.txt',
             '/robots.txt',
             '/site.webmanifest',
             '/sitemap.xml',
