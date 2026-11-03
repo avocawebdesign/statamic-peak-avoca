@@ -204,6 +204,9 @@ SYNC="scripts/server-git.sh"
 STATE=".git/avoca"
 mkdir -p "$STATE"
 
+# The remote can hold the account's token, which serves every site: never let git print it.
+redact() { sed -E 's#([a-zA-Z][a-zA-Z0-9+.-]*://)[^/@[:space:]]+@#\1***@#g; s#(gh[opsur]_|github_pat_)[A-Za-z0-9_]{8,}#\1***#g'; }
+
 exec 8>"$STATE/deploy.lock"
 flock -w 300 8 || { echo "Another deploy of this site is still running."; exit 1; }
 
@@ -216,7 +219,7 @@ if [ -f "$SYNC" ]; then
     AVOCA_PHP="{SITE_PHP}" AVOCA_GIT_BRANCH="$BRANCH" bash "$SYNC" sync
     SYNC_RESULT="$(cat "$STATE/sync-result")"
 else
-    git pull --ff-only origin "$BRANCH"
+    git pull --ff-only origin "$BRANCH" 2>&1 | redact
     SYNC_RESULT="integrated"
 fi
 
@@ -268,6 +271,9 @@ SYNC="scripts/server-git.sh"
 STATE=".git/avoca"
 mkdir -p "$STATE"
 
+# The remote can hold the account's token, which serves every site: never let git print it.
+redact() { sed -E 's#([a-zA-Z][a-zA-Z0-9+.-]*://)[^/@[:space:]]+@#\1***@#g; s#(gh[opsur]_|github_pat_)[A-Za-z0-9_]{8,}#\1***#g'; }
+
 exec 8>"$STATE/deploy.lock"
 flock -w 300 8 || { echo "Another deploy of this site is still running."; exit 1; }
 
@@ -275,7 +281,7 @@ if [ -f "$SYNC" ]; then
     AVOCA_PHP="$FORGE_PHP" AVOCA_GIT_BRANCH="$BRANCH" bash "$SYNC" sync
     SYNC_RESULT="$(cat "$STATE/sync-result")"
 else
-    git pull --ff-only origin "$BRANCH"
+    git pull --ff-only origin "$BRANCH" 2>&1 | redact
     SYNC_RESULT="integrated"
 fi
 
@@ -314,10 +320,12 @@ Both deploy scripts need the server set up like this. The full runbook, from cre
 
 **Zero downtime deployment off.** With it on, each release is a new folder and content saved on the server stays behind in the old one. Both scripts stop on a site that deploys into release folders.
 
+**Never print the remote.** On Ploi the remote is `https://<token>@github.com/...`, and that one token serves every site on the account. Don't run `git remote -v` or `git remote get-url` on a server, and pipe any other git output you need through the `sed` below, as the scripts here do.
+
 **A deploy key with write access.** The server pushes on every deploy, so tick Allow write access on its deploy key in GitHub (over HTTPS, the GitHub account connected to Ploi or Forge needs write access instead). Check as the site user before the first deploy:
 
 ```bash
-git push --dry-run origin HEAD:refs/heads/<branch>
+git push --dry-run origin HEAD:refs/heads/<branch> 2>&1 | sed -E 's#://[^/@[:space:]]+@#://***@#g'
 ```
 
 **Two cron jobs**, every minute, as the site user. The first commits and pushes content saved on the server. Leave out `AVOCA_GIT_QUIET_MINUTES=2` on Pro, where Statamic commits saves itself.
