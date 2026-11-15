@@ -225,7 +225,7 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
   asks for it (`setAgency()`, or `AVOCA_AGENCY` for a script). Its logo stands in on the control panel
   (`config/statamic/cp.php`), in form emails (`form_mail_logo` in `lang/*/strings.php`) and in the site header
   (`components/_logo`) until the client's arrives, and signs the prototype. Peak's logo is gone from the kit;
-  keep it out after an upstream merge. Whoosh and Honest Design have placeholder logos until their own arrive.
+  keep it out after an upstream merge. Honest Design has a placeholder logo until its own arrives.
 - `prototype/` is an empty discovery prototype: version 1 as content only, `data.js`, `pages.js` and `version.json`.
   Avoca Tools (v0.1.22 on) serves it at `/prototype`, on for local and staging unless `PROTOTYPE_ENABLED` says
   otherwise, with its interface, sign-in and helpers, and draws the pages with the site's real CSS. Decisions aren't
