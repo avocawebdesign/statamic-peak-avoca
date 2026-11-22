@@ -10,6 +10,7 @@ Avoca's build recipe comes from the avocadesign/statamic-tools package. Follow i
 - Navigation views are located in `resources/views/layout/navigation/`
 - Page builder blocks are in `resources/views/page_builder/`
 - The blocks and sets this site has, with their fields, options and usage guidance, are listed in `resources/site/catalogue.md`. Read it rather than relying on any list of blocks written elsewhere.
+- The facts this site's pages may state, each with its source, are in `resources/site/facts.md`. Before you write or change any copy, read `vendor/avocadesign/statamic-tools/recipe/facts.md` and follow it: never invent a number, customer, quote or outcome.
 - Reusable components for sets are in `resources/views/components/`
 - Common utility partials are in `resources/views/components/utilities`
 - Layout partials (header, footer, etc.) are in `resources/views/layout/`

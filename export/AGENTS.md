@@ -13,6 +13,7 @@ Guidance for AI coding agents working in this repository. Follow these conventio
 ## Build recipe
 - Before building or changing a page builder block, a text editor set, a collection, a global, the page header, the header or the footer, read Avoca's build recipe at `vendor/avocadesign/statamic-tools/recipe/recipe.md` and follow it. It sets the order for deciding how to build something (use a block the site has, install a library item, change an existing block, build a new block), the conventions for blocks, sets and collections, and the review steps.
 - The recipe comes with the avocadesign/statamic-tools package. If the file is missing, the package is not installed: tell the developer before you build anything.
+- Before writing or changing copy, such as a page's text, a case study or a meta description, read `vendor/avocadesign/statamic-tools/recipe/facts.md` and follow it. The facts the site's pages may state are in `resources/site/facts.md`. Never invent a number, customer, quote or outcome.
 
 ## Local Setup
 1. `composer install`
