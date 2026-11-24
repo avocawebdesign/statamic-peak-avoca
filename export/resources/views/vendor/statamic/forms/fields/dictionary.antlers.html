@@ -1,0 +1,25 @@
+{{# Forms 2 dictionary (countries, currencies, timezones…): our dropdown styling over the dictionary's options.
+    max_items 1 gives a single select; anything else a multiple select, sized to show a few rows. #}}
+<!-- /vendor/statamic/forms/fields/dictionary.antlers.html -->
+<select
+    x-model="form.{{ handle }}"
+    @change="form.validate('{{ handle }}')"
+    :aria-invalid="form.invalid('{{ handle }}')"
+    :class="{
+        'border-red-600 focus:border-red-600 outline-red-600/50!': form.invalid('{{ handle }}'),
+        'border-gray-800 focus:border-primary': !form.invalid('{{ handle }}')
+    }"
+    class="w-full rounded-sm border"
+    id="{{ id }}"
+    name="{{ handle }}{{ multiple ?= "[]" }}"
+    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    {{ multiple ?= 'multiple size="6"' }}
+>
+    {{ unless multiple }}
+        <option value>{{ placeholder ?? {trans key="Please select..."} }}</option>
+    {{ /unless }}
+    {{ foreach:options as="value|label" }}
+        <option value="{{ value }}" {{ if old|in_array(value) or old === value }}selected{{ /if }}>{{ label ?? value }}</option>
+    {{ /foreach:options }}
+</select>
+<!-- End: /vendor/statamic/forms/fields/dictionary.antlers.html -->

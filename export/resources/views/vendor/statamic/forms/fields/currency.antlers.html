@@ -1,0 +1,28 @@
+{{# Forms 2 currency: a number input with the currency symbol set inside the box on the left, as one control.
+    step comes from the currency's decimal places (0.01 for NZD), so the browser accepts cents. #}}
+<!-- /vendor/statamic/forms/fields/currency.antlers.html -->
+<div
+    class="flex w-full max-w-xs bg-white items-stretch border rounded-sm motion-safe:transition focus-within:border-primary"
+    :class="form.invalid('{{ handle }}') ? 'border-red-600' : 'border-gray-800'"
+>
+    {{ if currency_symbol }}
+        <span class="flex items-center pl-3 pr-1 font-medium" aria-hidden="true">{{ currency_symbol }}</span>
+    {{ /if }}
+    <input
+        x-model="form.{{ handle }}"
+        @change="form.validate('{{ handle }}')"
+        :aria-invalid="form.invalid('{{ handle }}')"
+        class="w-full min-w-0 border-0 bg-transparent caret-primary focus:ring-0 focus:outline-none tabular-nums"
+        id="{{ id }}"
+        name="{{ handle }}"
+        type="number"
+        inputmode="decimal"
+        {{ step ?= 'step="{step}"' }}
+        {{ min ?= 'min="{min}"' }}
+        {{ max ?= 'max="{max}"' }}
+        {{ placeholder ?= 'placeholder="{placeholder}"' }}
+        {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+        {{ old ?= 'value="{old}"' }}
+    >
+</div>
+<!-- End: /vendor/statamic/forms/fields/currency.antlers.html -->

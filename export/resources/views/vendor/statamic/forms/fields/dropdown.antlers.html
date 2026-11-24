@@ -1,5 +1,5 @@
 {{# id: Statamic's ID for the field, unique to its form, where upstream Peak uses the handle #}}
-<!-- /vendor/statamic/forms/fields/select.antlers.html -->
+<!-- /vendor/statamic/forms/fields/dropdown.antlers.html -->
 <select
     x-model="form.{{ handle }}"
     @change="form.validate('{{ handle }}')"
@@ -29,4 +29,4 @@
         </option>
     {{ /foreach:options }}
 </select>
-<!-- End: /vendor/statamic/forms/fields/select.antlers.html -->
+<!-- End: /vendor/statamic/forms/fields/dropdown.antlers.html -->

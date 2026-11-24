@@ -1,5 +1,15 @@
 # Changelog
 
+## Avoca (2026-11-25)
+
+### What's new
+- Forms 2. New sites require Statamic `^6.44`, set in `starter-kit.yaml`. The contact form's fields live in `resources/forms/contact.yaml`, as Forms 2 types (name, email, long answer, toggle), and its form blueprint is gone. Its two emails are an email connection: subjects take `[[ name ]]` mentions, and the owner's email replies to `field:email`, which is also the sender's confirmation address.
+- Every Forms 2 field type has a view in the kit's styling, in `resources/views/vendor/statamic/forms/fields/`: short answer, long answer, name, email, phone, website, number, currency, date and time pickers, dropdown, multi choice, yes/no, checkboxes, toggle, dictionary, image choice, ranking, star rating, opinion scale, upload, group, heading, paragraph, banner and spacer. Each binds to Precognition through Alpine like the fields before it. Star rating, yes/no, opinion scale and image choice are radios styled as controls; ranking reorders by buttons as well as dragging.
+- The Form block shows no label for a spacer, or for a heading, paragraph or banner, which Statamic marks `hide_display`.
+
+### What's changed
+- The Forms 1 views are renamed for the Forms 2 types: `textarea` is `long_answer`, `select` is `dropdown`, `radio` is `multi_choice`, `assets` is `upload`, and `text`, `date`, `files` and `integer` are gone. Statamic looks for a view named after a field's underlying fieldtype first, so a Forms 1 view left in place would draw the new type instead of its own.
+
 ## Avoca (2026-10-17)
 
 ### What's fixed

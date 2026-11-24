@@ -1,0 +1,41 @@
+{{# Forms 2 image choice: a grid of picture cards, each a radio (or a checkbox when multiple is on) hidden behind its card.
+    The chosen card takes a primary border and a tick. columns (1–4) and aspect_ratio come from the field; the column
+    classes are written out in full so Tailwind sees them. #}}
+<!-- /vendor/statamic/forms/fields/image_choice.antlers.html -->
+<fieldset
+    :aria-invalid="form.invalid('{{ handle }}')"
+    class="grid gap-4 {{ switch(
+        (columns == 1) => '',
+        (columns == 2) => 'sm:grid-cols-2',
+        (columns == 4) => 'grid-cols-2 md:grid-cols-4',
+        () => 'sm:grid-cols-2 md:grid-cols-3'
+    ) }}"
+    id="{{ id }}"
+    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+>
+    {{ options }}
+        <label class="group relative cursor-pointer">
+            <input
+                x-model="form.{{ handle }}"
+                @change="form.validate('{{ handle }}')"
+                class="peer sr-only"
+                type="{{ multiple ? 'checkbox' : 'radio' }}"
+                name="{{ multiple ? '{handle}[]' : handle }}"
+                value="{{ key }}"
+                {{ if multiple }}{{ (old | in_array(key)) ?= 'checked' }}{{ else }}{{ (old === key) ?= 'checked' }}{{ /if }}
+            >
+            <span class="block overflow-hidden rounded-sm border border-gray-800 motion-safe:transition
+                group-hover:border-primary peer-checked:border-primary peer-checked:bg-primary/10
+                peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">
+                {{ if image }}
+                    <img src="{{ image }}" alt="" class="block w-full object-cover" style="aspect-ratio: {{ aspect_ratio }}" loading="lazy">
+                {{ /if }}
+                <span class="block px-3 py-2 font-medium">{{ trans :key="label ?? key" }}</span>
+            </span>
+            <span class="absolute right-2 top-2 hidden size-7 items-center justify-center rounded-full bg-primary text-white peer-checked:flex" aria-hidden="true">
+                <svg viewBox="0 0 20 20" class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>
+            </span>
+        </label>
+    {{ /options }}
+</fieldset>
+<!-- End: /vendor/statamic/forms/fields/image_choice.antlers.html -->

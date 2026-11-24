@@ -1,0 +1,8 @@
+{{# Forms 2 heading: a heading inside the form, to break a long form into parts. It has no label (hide_display), so the
+    form's field wrapper must skip the label for it: see page_builder/_form. #}}
+<!-- /vendor/statamic/forms/fields/heading.antlers.html -->
+<div class="flex flex-col gap-1 pt-4">
+    <h3 class="heading-size-3">{{ trans :key="display" }}</h3>
+    {{ if subheading }}<p>{{ trans :key="subheading" }}</p>{{ /if }}
+</div>
+<!-- End: /vendor/statamic/forms/fields/heading.antlers.html -->

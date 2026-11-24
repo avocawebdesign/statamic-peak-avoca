@@ -1,0 +1,31 @@
+{{# Forms 2 group: a set of fields kept together (an address, say), posted as one value. Statamic's own view hands each
+    child back to the form's field loop through a slot; this one lays out its own children with the Form block's label,
+    width, required marker and error treatment, so a group looks the same whichever loop renders the form. #}}
+<!-- /vendor/statamic/forms/fields/group.antlers.html -->
+<fieldset class="grid w-full gap-6 md:grid-cols-12" id="{{ id }}">
+    {{ fields scope="child" }}
+        {{# child field wrapper #}}
+        <div class="flex flex-col stack-1 {{ switch(
+            (child:width == '25') => 'md:col-span-3',
+            (child:width == '33') => 'md:col-span-4',
+            (child:width == '50') => 'md:col-span-6',
+            (child:width == '66') => 'md:col-span-8',
+            (child:width == '75') => 'md:col-span-9',
+            () => 'md:col-span-12'
+        ) }}">
+            {{ unless child:hide_display || child:type == 'spacer' }}
+                <label class="font-bold" for="{{ child:id }}">
+                    {{ trans :key="child:display" }}
+                    {{ if child:validate | contains('required') }}<sup aria-label="{{ trans:strings.form_required }}" class="text-(--form-error)">*</sup>{{ /if }}
+                </label>
+            {{ /unless }}
+            <div class="stack-space-2 flex flex-col stack-2">
+                {{ child:field }}
+                <template x-if="form.invalid('{{ child:handle }}')">
+                    <span class="mt-1 text-(--form-error) text-sm font-bold" x-text="form.errors['{{ child:handle }}']"></span>
+                </template>
+            </div>
+        </div>
+    {{ /fields }}
+</fieldset>
+<!-- End: /vendor/statamic/forms/fields/group.antlers.html -->

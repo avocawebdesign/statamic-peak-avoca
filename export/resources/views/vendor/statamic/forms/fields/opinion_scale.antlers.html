@@ -1,0 +1,39 @@
+{{# Forms 2 opinion scale (e.g. 0–10, "how likely are you to recommend us"): a row of numbered radios, with the
+    low/high labels set under each end rather than beside every number as Statamic's own view does. #}}
+<!-- /vendor/statamic/forms/fields/opinion_scale.antlers.html -->
+<fieldset
+    :aria-invalid="form.invalid('{{ handle }}')"
+    class="w-full max-w-xl"
+    id="{{ id }}"
+    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+>
+    <div class="flex">
+        {{ foreach:scale_values as="scale_value" }}
+            <label class="relative flex-1 cursor-pointer">
+                <input
+                    x-model="form.{{ handle }}"
+                    @change="form.validate('{{ handle }}')"
+                    class="peer sr-only"
+                    type="radio"
+                    name="{{ handle }}"
+                    value="{{ scale_value }}"
+                    {{ if old !== null && old !== '' && (old | to_string) === (scale_value | to_string) }}checked{{ /if }}
+                >
+                <span class="block py-2 text-center font-medium border border-gray-800 motion-safe:transition
+                    {{ first ? 'rounded-l-sm' : '-ml-px' }} {{ last ?= 'rounded-r-sm' }}
+                    peer-checked:relative peer-checked:z-10 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white
+                    peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary hover:border-primary">
+                    {{ scale_value }}
+                </span>
+            </label>
+        {{ /foreach:scale_values }}
+    </div>
+    {{ if low_label || middle_label || high_label }}
+        <div class="mt-1 flex justify-between text-sm" aria-hidden="true">
+            <span>{{ low_label }}</span>
+            <span>{{ middle_label }}</span>
+            <span>{{ high_label }}</span>
+        </div>
+    {{ /if }}
+</fieldset>
+<!-- End: /vendor/statamic/forms/fields/opinion_scale.antlers.html -->

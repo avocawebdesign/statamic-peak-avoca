@@ -92,7 +92,8 @@
                                             () => 'md:col-span-12'
                                         )}}
                                     ">
-                                        {{ unless type == 'spacer' }}
+                                        {{# Forms 2 spacers, and headings, paragraphs and banners (hide_display), have no label #}}
+                                        {{ unless type == 'spacer' || hide_display }}
                                             {{# A consent field's statement is its inline label, so this one is for screen readers only #}}
                                             <label class="{{ handle == 'consent' ? 'sr-only' : 'font-bold' }}" for="{{ field:id }}">
                                                 {{ trans :key="field:display" }}

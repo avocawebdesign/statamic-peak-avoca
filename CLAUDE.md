@@ -208,6 +208,10 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
   Statamic upgrade). `resources/views/vendor/statamic-peak-tools/snippets/_form_handler.antlers.html` is
   Avoca's copy of the Peak Tools handler, changed only to find the summary inside its own form: when Peak
   Tools changes its handler, copy it again and repeat that change. Keep all of this on upstream merges.
+- Forms 2 (Statamic 6.44): forms live in `resources/forms/{handle}.yaml` with their fields and an email connection; there
+  are no form blueprints. The field views are named for the Forms 2 types. Statamic looks for a view named after a
+  field's underlying fieldtype (`textarea`, `select`, `radio`, `text`…) before the Forms 2 name, so never add a view
+  under a Forms 1 name, or an upstream merge's: it would draw every Forms 2 type built on it.
 
 ## Site guidance and the AI block catalogue
 

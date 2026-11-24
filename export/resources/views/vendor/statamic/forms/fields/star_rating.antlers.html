@@ -1,0 +1,37 @@
+{{# Forms 2 star rating, rebuilt as one radio per star rather than Statamic's painted range slider, so it binds to
+    Precognition with x-model like our other fields, reads as "3 of 5 stars" to screen readers and is arrow-key navigable.
+    Whole stars only: allow_half_stars is ignored here. If we ever need halves, go back to Statamic's view. #}}
+<!-- /vendor/statamic/forms/fields/star_rating.antlers.html -->
+<fieldset
+    x-data="{ hover: 0 }"
+    @mouseleave="hover = 0"
+    :aria-invalid="form.invalid('{{ handle }}')"
+    class="inline-flex w-fit gap-1"
+    id="{{ id }}"
+    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+>
+    {{ loop from="1" :to="max_stars ?? 5" }}
+        <label class="relative cursor-pointer" @mouseenter="hover = {{ value }}">
+            <input
+                x-model="form.{{ handle }}"
+                @change="form.validate('{{ handle }}')"
+                class="peer sr-only"
+                type="radio"
+                name="{{ handle }}"
+                value="{{ value }}"
+                {{ (old == value) ?= 'checked' }}
+            >
+            <span class="sr-only">{{ value }} / {{ max_stars ?? 5 }}</span>
+            <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                class="size-8 motion-safe:transition-colors peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary rounded-sm"
+                :class="(hover || Number(form.{{ handle }}) || 0) >= {{ value }} ? 'text-primary fill-current' : 'text-gray-400 fill-transparent'"
+                stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"
+            >
+                <path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95L12 2.5z"/>
+            </svg>
+        </label>
+    {{ /loop }}
+</fieldset>
+<!-- End: /vendor/statamic/forms/fields/star_rating.antlers.html -->

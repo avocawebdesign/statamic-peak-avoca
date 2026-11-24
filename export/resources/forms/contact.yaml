@@ -1,3 +1,62 @@
+title: Contact
+honeypot: fax
+fields:
+  sections:
+    -
+      fields:
+        -
+          handle: name
+          field:
+            display: Name
+            type: name
+            validate:
+              - required
+              - 'min:2'
+            localizable: true
+            width: 66
+        -
+          handle: email
+          field:
+            display: 'Email address'
+            type: email
+            validate:
+              - required
+            localizable: true
+            width: 66
+        -
+          handle: message_body
+          field:
+            display: Message
+            type: long_answer
+            validate:
+              - required
+              - 'min:5'
+            localizable: true
+        -
+          handle: consent
+          field:
+            inline_label: 'I understand my details will be stored so you can get back to me.'
+            display: Consent
+            type: toggle
+            validate:
+              - accepted
+            visibility: hidden
+connections:
+  email:
+    -
+      id: iwArpANx
+      to: '{{ site_details:email ?? config:mail:from:address }}'
+      reply_to: 'field:email'
+      subject: '{{ trans:strings.form_subject_received }}: [[ name ]]'
+      html: email/form_owner
+      text: email/form_owner_text
+    -
+      id: p0bMnaXJ
+      to: 'field:email'
+      reply_to: '{{ site_details:email ?? config:mail:from:address }}'
+      subject: '{{ trans:strings.form_subject_sent }}'
+      html: email/form_sender
+      text: email/form_sender_text
 content_sender:
   show_submitted_data: false
   email_text:
@@ -27,20 +86,3 @@ content_sender:
           text: '{{ trans:strings.form_mail_from }}'
 content_owner:
   show_submitted_data: true
-title: Contact
-honeypot: fax
-email:
-  -
-    id: iwArpANx
-    to: '{{ site_details:email ?? config:mail:from:address }}'
-    reply_to: '{{ email }}'
-    subject: '{{ trans:strings.form_subject_received }}: {{ name }}'
-    html: email/form_owner
-    text: email/form_owner_text
-  -
-    id: p0bMnaXJ
-    to: '{{ email }}'
-    reply_to: '{{ site_details:email ?? config:mail:from:address }}'
-    subject: '{{ trans:strings.form_subject_sent }}'
-    html: email/form_sender
-    text: email/form_sender_text

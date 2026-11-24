@@ -1,0 +1,45 @@
+{{# Forms 2 ranking: the options as a numbered list the visitor puts in order. Each row has move up and move down
+    buttons, so it works by keyboard and on phones; rows can also be dragged with a mouse. The order is kept in
+    form.{handle} (for Precognition) and in hidden name[] inputs (for a plain post), so both always agree. #}}
+<!-- /vendor/statamic/forms/fields/ranking.antlers.html -->
+<ol
+    x-data="{
+        items: {{ if value }}{{ value | to_json | entities }}{{ else }}{{ options | keys | to_json | entities }}{{ /if }},
+        labels: {{ options | to_json | entities }},
+        dragging: null,
+        init() { this.sync() },
+        sync() { form.{{ handle }} = [...this.items] },
+        move(from, to) {
+            if (to < 0 || to >= this.items.length) return
+            this.items.splice(to, 0, this.items.splice(from, 1)[0])
+            this.sync()
+            form.validate('{{ handle }}')
+        },
+    }"
+    :aria-invalid="form.invalid('{{ handle }}')"
+    class="flex w-full max-w-md flex-col gap-2"
+    id="{{ id }}"
+    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+>
+    <template x-for="(item, index) in items" :key="item">
+        <li
+            draggable="true"
+            @dragstart="dragging = index"
+            @dragover.prevent="if (dragging !== null && dragging !== index) { move(dragging, index); dragging = index }"
+            @dragend="dragging = null"
+            :class="dragging === index ? 'opacity-50' : ''"
+            class="flex items-center gap-3 rounded-sm border border-gray-800 py-2 pl-3 pr-2 cursor-grab active:cursor-grabbing"
+        >
+            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white" x-text="index + 1"></span>
+            <span class="grow font-medium" x-text="labels[item] ?? item"></span>
+            <input type="hidden" name="{{ handle }}[]" :value="item">
+            <button type="button" @click="move(index, index - 1)" :disabled="index === 0" class="rounded-sm p-1 hover:bg-primary/10 disabled:opacity-25 focus-visible:outline-2 focus-visible:outline-primary" :aria-label="`{{ trans key="Move up" }}: ${labels[item] ?? item}`">
+                <svg viewBox="0 0 20 20" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l5-5 5 5"/></svg>
+            </button>
+            <button type="button" @click="move(index, index + 1)" :disabled="index === items.length - 1" class="rounded-sm p-1 hover:bg-primary/10 disabled:opacity-25 focus-visible:outline-2 focus-visible:outline-primary" :aria-label="`{{ trans key="Move down" }}: ${labels[item] ?? item}`">
+                <svg viewBox="0 0 20 20" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7.5l5 5 5-5"/></svg>
+            </button>
+        </li>
+    </template>
+</ol>
+<!-- End: /vendor/statamic/forms/fields/ranking.antlers.html -->

@@ -1,5 +1,5 @@
 {{# id: Statamic's ID for the field, unique to its form, where upstream Peak uses the handle #}}
-<!-- /vendor/statamic/forms/fields/textarea.antlers.html -->
+<!-- /vendor/statamic/forms/fields/long_answer.antlers.html -->
 <textarea
     x-model="form.{{ handle }}"
     @change="form.validate('{{ handle }}')"
@@ -17,4 +17,4 @@
     {{ character_limit ?= 'maxlength="{character_limit}"' }}
     {{ autocomplete ?= 'autocomplete="{autocomplete}"' }}
 >{{ old }}</textarea>
-<!-- End: /vendor/statamic/forms/fields/textarea.antlers.html -->
+<!-- End: /vendor/statamic/forms/fields/long_answer.antlers.html -->

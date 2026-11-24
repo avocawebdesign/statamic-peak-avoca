@@ -1,0 +1,30 @@
+{{# Forms 2 yes/no: two radios styled as a segmented pair. Options are always yes and no (labels translated by Statamic).
+    Statamic's own view is plain radios; this matches our form inputs and works with Precognition through x-model. #}}
+<!-- /vendor/statamic/forms/fields/yes_no.antlers.html -->
+<fieldset
+    :aria-invalid="form.invalid('{{ handle }}')"
+    class="inline-flex w-fit"
+    id="{{ id }}"
+    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+>
+    {{ foreach:options as="value|label" }}
+        <label class="relative cursor-pointer">
+            <input
+                x-model="form.{{ handle }}"
+                @change="form.validate('{{ handle }}')"
+                class="peer sr-only"
+                type="radio"
+                name="{{ handle }}"
+                value="{{ value }}"
+                {{ (old === value) ?= 'checked' }}
+            >
+            <span class="block min-w-20 px-5 py-2 text-center font-medium border border-gray-800 motion-safe:transition
+                {{ first ? 'rounded-l-sm' : '-ml-px rounded-r-sm' }}
+                peer-checked:relative peer-checked:z-10 peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white
+                peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary hover:border-primary">
+                {{ trans :key="label" }}
+            </span>
+        </label>
+    {{ /foreach:options }}
+</fieldset>
+<!-- End: /vendor/statamic/forms/fields/yes_no.antlers.html -->

@@ -1,5 +1,5 @@
 {{# id: Statamic's ID for the field, which the Form block's label points at; upstream Peak gives none #}}
-<!-- /vendor/statamic/forms/fields/assets.antlers.html -->
+<!-- /vendor/statamic/forms/fields/upload.antlers.html -->
 <input
     @change="form.{{ handle }} = Object.values($event.target.files)"
     :aria-invalid="form.invalid('{{ handle }}')"
@@ -14,4 +14,4 @@
     {{ /if }}
     {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
 >
-<!-- End: /vendor/statamic/forms/fields/assets.antlers.html -->
+<!-- End: /vendor/statamic/forms/fields/upload.antlers.html -->

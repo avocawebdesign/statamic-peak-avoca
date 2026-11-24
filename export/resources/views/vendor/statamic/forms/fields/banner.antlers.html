@@ -1,0 +1,16 @@
+{{# Forms 2 banner: a boxed note inside the form. Its state (notice, tip, warning, important, success) sets the colour,
+    as a tint that reads on every colour scheme; the text keeps the scheme's body colour. Content is markdown. #}}
+<!-- /vendor/statamic/forms/fields/banner.antlers.html -->
+<div
+    role="note"
+    class="flex gap-3 rounded-sm border-l-4 px-4 py-3 {{ switch(
+        (state == 'tip') => 'border-primary bg-primary/10',
+        (state == 'success') => 'border-green-600 bg-green-600/10',
+        (state == 'warning') => 'border-amber-500 bg-amber-500/10',
+        (state == 'important') => 'border-red-600 bg-red-600/10',
+        () => 'border-gray-500 bg-gray-500/10'
+    ) }}"
+>
+    <div class="stack-2 [&_a]:underline">{{ content | markdown }}</div>
+</div>
+<!-- End: /vendor/statamic/forms/fields/banner.antlers.html -->
