@@ -38,6 +38,10 @@ return [
             'path' => public_path('static'),
             'lock_hold_length' => 0,
             'warm_concurrency' => 10,
+            'permissions' => [
+                'directory' => 0755,
+                'file' => 0644,
+            ],
         ],
 
     ],
@@ -64,6 +68,7 @@ return [
             '/sitemap.xml',
             '/sitemaps.xml',
         ],
+
     ],
 
     /*
@@ -105,7 +110,7 @@ return [
     ],
 
     'disallowed_query_strings' => [
-        //
+        'fbclid', 'gclid', 'msclkid', 'utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term',
     ],
 
     /*
@@ -125,8 +130,6 @@ return [
 
     'nocache_db_connection' => env('STATAMIC_NOCACHE_DB_CONNECTION'),
 
-    'nocache_js_position' => 'body',
-
     /*
     |--------------------------------------------------------------------------
     | Replacers
@@ -144,6 +147,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Script Delivery
+    |--------------------------------------------------------------------------
+    |
+    | Full measure static caching injects small <script> snippets into cached
+    | pages to swap CSRF tokens and hydrate nocache regions. By default these
+    | are inlined. Sites with a Content Security Policy that disallows inline
+    | scripts may set this to "external" to have the snippets served from
+    | dedicated routes and referenced with a <script src> tag instead.
+    |
+    | Supported: "inline", "external"
+    |
+    */
+
+    'script_delivery' => env('STATAMIC_STATIC_CACHING_SCRIPT_DELIVERY', 'inline'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Warm Queue
     |--------------------------------------------------------------------------
     |
@@ -158,5 +178,36 @@ return [
     'warm_queue_connection' => env('STATAMIC_STATIC_WARM_QUEUE_CONNECTION'),
 
     'warm_insecure' => env('STATAMIC_STATIC_WARM_INSECURE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Background Re-cache
+    |--------------------------------------------------------------------------
+    |
+    | When this is enabled, Statamic will re-cache URLs in the background,
+    | overwriting the existing cache, without removing it first.
+    |
+    */
+
+    'background_recache' => env('STATAMIC_BACKGROUND_RECACHE', false),
+
+    'recache_token' => env('STATAMIC_RECACHE_TOKEN'),
+
+    'recache_token_parameter' => '__recache',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Shared Error Pages
+    |--------------------------------------------------------------------------
+    |
+    | You may choose to share the same statically generated error page across
+    | all errors. For example, the first time a 404 is encountered it will
+    | be generated and cached, and then served for all subsequent 404s.
+    |
+    | This is only supported for half measure.
+    |
+    */
+
+    'share_errors' => false,
 
 ];

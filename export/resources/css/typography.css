@@ -131,18 +131,19 @@
         > :not(.not-prose) {
             color: var(--prose-base);
 
-            > * + * {
+            /* Peak v22.2.1: spacing at every depth (text in a nested wrapper keeps the rhythm), never inside a .not-prose
+               island. Inside :where() so it weighs what the old "> * + *" did, and the list and figure spacing below still win. */
+            :where(* + *:not(.not-prose, .not-prose *)) {
                 margin-block-start: var(--prose-space);
-            }
-
-            :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
-                margin-block-start: 1em;
             }
 
             :is(h1, h2, h3, h4, h5, h6) {
                 margin-block-end: .5em;
-
                 color: var(--prose-headings);
+
+                &:not(:first-child) {
+                    margin-block-start: 1em;
+                }
             }
 
             a {
