@@ -3,8 +3,8 @@
 <fieldset
     :aria-invalid="form.invalid('{{ handle }}')"
     class="flex {{ inline ? 'gap-x-4' : 'flex-col gap-y-2' }}"
-    id="{{ id }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    id="{{ handle }}"
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
 >
     {{ foreach:options as="value|label" }}
         <label class="inline-flex items-baseline">
@@ -18,7 +18,7 @@
                 {{ (old === value) ?= 'checked' }}
             >
             <span>
-                {{ trans :key="label" }}
+                {{ label | trans }}
             </span>
         </label>
     {{ /foreach:options }}

@@ -10,8 +10,8 @@
         (columns == 4) => 'grid-cols-2 md:grid-cols-4',
         () => 'sm:grid-cols-2 md:grid-cols-3'
     ) }}"
-    id="{{ id }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    id="{{ handle }}"
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
 >
     {{ options }}
         <label class="group relative cursor-pointer">

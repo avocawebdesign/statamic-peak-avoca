@@ -57,7 +57,7 @@ dependencies:
   jacksleight/statamic-bard-texstyle: ^4.0
   statamic/cms: ^6.44
   studio1902/statamic-peak-seo: ^11.0
-  studio1902/statamic-peak-tools: ^9.0
+  studio1902/statamic-peak-tools: ^9.3
 modules:
   commands:
     prompt: 'Would you like to install the paid Peak Commands addon?'

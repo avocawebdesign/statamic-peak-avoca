@@ -7,8 +7,8 @@
     @mouseleave="hover = 0"
     :aria-invalid="form.invalid('{{ handle }}')"
     class="inline-flex w-fit gap-1"
-    id="{{ id }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    id="{{ handle }}"
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
 >
     {{ loop from="1" :to="max_stars ?? 5" }}
         <label class="relative cursor-pointer" @mouseenter="hover = {{ value }}">

@@ -4,8 +4,8 @@
 <fieldset
     :aria-invalid="form.invalid('{{ handle }}')"
     class="inline-flex w-fit"
-    id="{{ id }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    id="{{ handle }}"
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
 >
     {{ foreach:options as="value|label" }}
         <label class="relative cursor-pointer">

@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Policies\CustomUserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Statamic\Facades\Entry;
 use Statamic\Facades\Form;
 use Statamic\Policies\UserPolicy;
 use Studio1902\PeakSeo\Handlers\ErrorPage;
@@ -44,7 +46,31 @@ class AppServiceProvider extends ServiceProvider
 
         $this->bootRoute();
 
-        $this->bootFormConfig();
+        $this->bootFormRedirects();
+    }
+
+    /**
+     * A Thank-you page in every form's settings, just after Peak Tools' Success message. It has its own
+     * section because sections are keyed by name, and Peak Tools' "Fields" section would replace ours.
+     * Statamic has no redirect setting of its own, only Form::redirect() callbacks, which it checks
+     * first when a submission succeeds. Peak Tools' form handler then follows the redirect in the response.
+     */
+    public function bootFormRedirects(): void
+    {
+        Form::appendConfigFields('*', __('After submission'), [
+            'redirect' => [
+                'type' => 'entries',
+                'collections' => ['pages'],
+                'max_items' => 1,
+                'display' => __('Thank-you page'),
+                'instructions' => __('Optional. After a successful submission, send people to this page instead of showing the success message.'),
+            ],
+        ], afterSection: 'fields');
+
+        Form::all()->each(fn ($form) => Form::redirect(
+            $form->handle(),
+            fn ($submission) => Entry::find(Arr::first(Arr::wrap($submission->form()->get('redirect'))))?->url()
+        ));
     }
 
     public function bootRoute(): void
@@ -52,34 +78,5 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
-    }
-
-    public function bootFormConfig(): void
-    {
-        Form::appendConfigFields('*', __('Custom form sender text'), [
-            'content_sender' => [
-                'full_width_setting' => true,
-                'type' => 'group',
-                'display' => '',
-                'fullscreen' => false,
-                'border' => false,
-                'fields' => [
-                    ['import' => 'form_email_config'],
-                ],
-            ],
-        ]);
-
-        Form::appendConfigFields('*', __('Custom form owner text'), [
-            'content_owner' => [
-                'full_width_setting' => true,
-                'type' => 'group',
-                'display' => '',
-                'fullscreen' => false,
-                'border' => false,
-                'fields' => [
-                    ['import' => 'form_email_config'],
-                ],
-            ],
-        ]);
     }
 }

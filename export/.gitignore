@@ -12,8 +12,8 @@
 .env
 .env.backup
 .env.check
+.idea
 /.phpunit.cache
-.antlers.json
 Homestead.json
 Homestead.yaml
 npm-debug.log

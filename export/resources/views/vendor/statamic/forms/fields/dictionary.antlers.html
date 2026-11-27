@@ -10,9 +10,9 @@
         'border-gray-800 focus:border-primary': !form.invalid('{{ handle }}')
     }"
     class="w-full rounded-sm border"
-    id="{{ id }}"
+    id="{{ handle }}"
     name="{{ handle }}{{ multiple ?= "[]" }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
     {{ multiple ?= 'multiple size="6"' }}
 >
     {{ unless multiple }}

@@ -5,149 +5,20 @@
 #}}
 
 <!-- /page_builder/_form.antlers.html -->
-{{# critical.css with the forms plugin and this block, inlined by the layout in critical.css's place #}}
-{{ section:critical_css }}<style>{{ vite:content src="resources/css/critical-forms.css" directory="_build" }}</style>{{ /section:critical_css }}
-{{# Precognition and the captcha's script, into the layout's head ahead of site.js, so only pages with a form load them #}}
-{{ once }}{{ push:forms }}{{ vite src="resources/js/forms.js" directory="_build" }}{{ captcha:head }}{{ /push:forms }}{{ /once }}
 {{ partial:page_builder/block :colour_scheme="block:colour_scheme" :block_margins="block:block_margins" :custom_class="block:custom_class" }}
     {{# outer wrapper #}}
     <div class="span-content {{ if block:include_contact_details }}md:col-start-[col-1] md:col-span-12 grid md:grid-cols-3 gap-8{{ else }}md:col-start-[col-3] md:col-span-8{{ /if }}">
 
         {{# form column #}}
         <div class="stack-8 {{ if block:include_contact_details }}md:col-span-2{{ /if }}">
-        {{ if block:heading || block:text }}
-            <header class="flex flex-col gap-2">
-                {{ if block:heading }}<h2>{{ block:heading | nl2br }}</h2>{{ /if }}
-                {{ if block:text }}<p>{{ block:text | nl2br }}</p>{{ /if }}
-            </header>
-        {{ /if }}
+            {{ if block:heading || block:text }}
+                <header class="flex flex-col gap-2">
+                    {{ if block:heading }}<h2>{{ block:heading | nl2br }}</h2>{{ /if }}
+                    {{ if block:text }}<p>{{ block:text | nl2br }}</p>{{ /if }}
+                </header>
+            {{ /if }}
 
-        {{# Render form and use Alpine based Statamic conditional logic. #}}
-        {{ if block:form:handle }}
-            {{ form:create :in="block:form:handle" js="alpine:form" attr:x-ref="form" }}
-                {{# Use Laravel Precognition for live validation and submission. #}}
-                <div x-data="formHandler()" class="flex flex-col gap-8" x-cloak>
-                    {{# Error summary. Its ID carries the form handle, and the form handler looks for it inside its own form. #}}
-                    <template x-if="form.hasErrors && submitted">
-                        {{ partial:components/notification type="error" }}
-                            {{ slot:attributes }}id="{{ block:form:handle }}-form-summary" role="group"{{ /slot:attributes }}
-                            <h3 class="mb-2 font-bold text-red-700">{{ trans:strings.form_error }}</h3>
-                            <ul class="list-disc list-inside marker:text-red-700">
-                                <template x-for="(error, index) in form.errors">
-                                    <li>
-                                        {{# Rebuilds Statamic's field ID (RendersForms::generateFieldId()) and focuses that field, or a group's first input #}}
-                                        <a :href="`#{{ block:form:handle }}-form-${index}-field`.replace(/[._]/g, '-')" @click.prevent="$focus.focus($refs.form.querySelector(`${$el.hash} input`) ?? $refs.form.querySelector($el.hash))" x-text="error" class="underline text-red-700 focus:outline-red-700"></a>
-                                    </li>
-                                </template>
-                            </ul>
-                        {{ /partial:components/notification }}
-                    </template>
-
-                    <template x-if="success">
-                        {{ partial:components/notification type="success" content="{trans:strings.form_success}" }}
-                    </template>
-
-                    {{# Polite live notifications for screen readers only. #}}
-                    <ul aria-live="polite" class="sr-only">
-                        <template x-if="success">
-                            <li>{{ trans:strings.form_success }}</li>
-                        </template>
-
-                        <template x-if="form.errors && !submitted">
-                            <template x-for="error in form.errors">
-                                <li x-text="error"></li>
-                            </template>
-                        </template>
-                    </ul>
-
-                    {{# Honeypot. Its ID carries the form handle, so each form on a page has its own. #}}
-                    <div class="hidden">
-                        <label class="font-bold" for="{{ block:form:handle }}-form-{{ honeypot }}">{{ trans:strings.form_honeypot }} <sup class="text-(--form-error)">*</sup></label>
-                        <input class="form-input w-full" id="{{ block:form:handle }}-form-{{ honeypot }}" type="text" name="{{ honeypot }}" x-model="form.{{ honeypot }}" tabindex="-1" autocomplete="off"/>
-                    </div>
-
-                    {{# Render various form sections. #}}
-                    {{ sections }}
-                        <fieldset class="w-full grid md:grid-cols-12 gap-6">
-                            {{ if display || instructions }}
-                                <span class="md:col-span-12">
-                                    {{ if display }}<legend class="mb-2 heading-size-2 font-bold">{{ trans :key="display" }}</legend>{{ /if }}
-                                    {{ if instructions }}<p>{{ trans :key="instructions" }}</p>{{ /if }}
-                                </span>
-                            {{ /if }}
-
-                            {{# Fields. Required markers and errors use --form-error, which each colour scheme sets. #}}
-                            {{# field:id is unique to its form, where a handle may repeat in another form on the page #}}
-                            {{ %form:fields scope="field" }}
-                                <template x-if="{{ show_field }}">
-                                    <div class="
-                                        flex flex-col stack-1
-                                        {{ input_type == 'hidden' ?= 'hidden' }}
-                                        {{ switch(
-                                            (width == '25') => 'md:col-span-3',
-                                            (width == '33') => 'md:col-span-4',
-                                            (width == '50') => 'md:col-span-6',
-                                            (width == '66') => 'md:col-span-8',
-                                            (width == '75') => 'md:col-span-9',
-                                            () => 'md:col-span-12'
-                                        )}}
-                                    ">
-                                        {{# Forms 2 spacers, and headings, paragraphs and banners (hide_display), have no label #}}
-                                        {{ unless type == 'spacer' || hide_display }}
-                                            {{# A consent field's statement is its inline label, so this one is for screen readers only #}}
-                                            <label class="{{ handle == 'consent' ? 'sr-only' : 'font-bold' }}" for="{{ field:id }}">
-                                                {{ trans :key="field:display" }}
-                                                {{ if validate | contains('required') || validate | contains('accepted') }}
-                                                    <sup aria-label="{{ trans:strings.form_required }}" class="text-(--form-error)">*</sup>
-                                                {{ /if }}
-                                            </label>
-
-                                            {{ if field:instructions && instructions_position != 'below' }}
-                                                <span id="{{ field:id }}-instructions" class="text-sm">
-                                                    {{ trans :key="field:instructions" }}
-                                                </span>
-                                            {{ /if }}
-                                        {{ /unless }}
-
-                                        <div class="stack-space-2 flex flex-col stack-2">
-                                            {{ field:field }}
-
-                                            {{# Inline error. #}}
-                                            <template x-if="form.invalid('{{ handle }}')">
-                                                <span class="mt-1 text-(--form-error) text-sm font-bold" x-text="form.errors.{{ handle }}"></span>
-                                            </template>
-
-                                            {{ if field:instructions && instructions_position === 'below' }}
-                                                <span id="{{ field:id }}-instructions" class="text-sm">
-                                                    {{ trans :key="field:instructions" }}
-                                                </span>
-                                            {{ /if }}
-                                        </div>
-                                    </div>
-                                </template>
-                            {{ /%form:fields }}
-                        </fieldset>
-                    {{ /sections }}
-
-                    {{# Captcha, with the provider set in config/captcha.php (default: Turnstile). #}}
-                    {{ captcha data-theme="light" }}
-
-                    {{# Submit button, disabled on processing. #}}
-                    <div class="w-full flex justify-end">
-                        <div class="md:col-span-12 flex justify-end">
-                            {{ partial:components/button as="button" button_type="button" label="{ trans:strings.form_send }" }}
-                                {{ slot:attributes }}
-                                    @click.prevent="submit" :disabled="form.processing" :class="{ 'opacity-25 cursor-default': form.processing }"
-                                {{ /slot:attributes }}
-                            {{ /partial:components/button }}
-                        </div>
-                    </div>
-                </div>
-            {{ /form:create }}
-
-            {{# Call in the Peak Tools Alpine Based Precognition Form Handler. #}}
-            {{ partial:statamic-peak-tools::snippets/form_handler }}
-        {{ /if }}
+            {{ partial:components/form :form_handle="block:form:handle" }}
         </div>
 
         {{# Contact details column, a third of the width, from site_details. #}}

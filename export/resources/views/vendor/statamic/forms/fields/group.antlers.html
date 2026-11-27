@@ -2,7 +2,7 @@
     child back to the form's field loop through a slot; this one lays out its own children with the Form block's label,
     width, required marker and error treatment, so a group looks the same whichever loop renders the form. #}}
 <!-- /vendor/statamic/forms/fields/group.antlers.html -->
-<fieldset class="grid w-full gap-6 md:grid-cols-12" id="{{ id }}">
+<fieldset class="grid w-full gap-6 md:grid-cols-12" id="{{ handle }}">
     {{ fields scope="child" }}
         {{# child field wrapper #}}
         <div class="flex flex-col stack-1 {{ switch(

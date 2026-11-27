@@ -27,9 +27,9 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
 - The forms plugin (`@plugin "@tailwindcss/forms"`) is in `site.css`, just above the `peak.css` import, and
   in `critical-forms.css`, not in `peak.css`, so `critical.css` doesn't inline its base styles for inputs on
   every page. When an upstream merge brings it back into `peak.css`, take it out again.
-- Critical CSS: the layout yields a `critical_css` section with `critical.css` as its default. The Form block
-  fills it with `critical-forms.css`, which imports `critical.css` and adds the forms plugin, the Form block,
-  the form field views, the notification and the contact details. A page inlines one critical sheet, never
+- Critical CSS: the layout yields a `critical_css` section with `critical.css` as its default. The form component
+  (`components/_form`) fills it with `critical-forms.css`, which imports `critical.css` and adds the forms plugin, the
+  Form block and the form component, the form field views, the notification and the contact details. A page inlines one critical sheet, never
   two: Tailwind orders utilities within a sheet, so a utility in a second sheet would beat a responsive one
   in the first.
 - Robots: Peak SEO serves `/robots.txt` from the SEO global. The `bots` global only holds `llms.txt`.
@@ -49,9 +49,10 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
 
 - `StarterKitPostInstall.php` is stock upstream except for two Avoca additions and one removal, all to
   re-apply on merge: `cleanUp()` deletes the skeleton's `public/robots.txt` so Peak SEO's robots route is
-  not shadowed, `setAgency()` asks who is running the project, and `setMailFromAddress()` no longer
-  rewrites the contact form's `to` and `reply_to`, because the form reads the Site Details email instead.
-  Remove those two `replaceInContact()` calls again after a merge. Avoca Tools is listed in `starter-kit.yaml` like any other dependency, which it
+  not shadowed, `setAgency()` asks who is running the project and copies its `logo.png` to
+  `public/images/form-mail-logo.png` (the Configuration global's Form mail logo, which form emails show), and
+  `setMailFromAddress()` no longer rewrites the contact form's addresses, because the form reads the Site Details
+  email instead. Remove its `replaceInContact()` call again after a merge. Avoca Tools is listed in `starter-kit.yaml` like any other dependency, which it
   can be now that the package is public. It used to be required by the hook, because Statamic installs a
   kit's dependencies before the hook runs and a plain `statamic new` couldn't find a private package
   listed there.
@@ -136,7 +137,7 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
   Peak's toolbar (local only) and Peak SEO's consent banner (`seo:use_consent_banner`). It imports Alpine's core
   and registers the plugin as the module runs, not on `alpine:init`: the banner's inline `alpine:init` listener
   calls `Alpine.$persist` and is registered first, so a plugin registered on `alpine:init` arrives too late.
-- Precognition loads with `forms.js`, which the Form block pushes, together with the captcha's script.
+- Precognition loads with `forms.js`, which the form component pushes, together with the captcha's script.
 - `manualChunks` in `vite.config.js` gives only Alpine's core a chunk of its own, shared by `site.js` and
   `persist.js`. Every other package goes with the entry that imports it, so a plugin only some pages need isn't
   in a chunk every page loads. Upstream splits every package into its own chunk; keep ours on merge.
@@ -158,8 +159,8 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
   marked `{{# Avoca #}}` (or described in the header when it is one line).
 - The kit's copies: Peak SEO's `snippets/_seo` (the JSON-ld field through the antlers modifier) and
   `components/_consent_banner` (Peak's `neutral` as `gray-800`, and a revoke date check that no longer breaks the
-  script when no date is set); Peak Tools' `snippets/_form_handler` (see Page builder blocks); Statamic's form field
-  views (per-form IDs). After updating one of those packages, compare its view with the copy and repeat the changes.
+  script when no date is set). After updating one of those packages, compare its view with the copy and repeat the
+  changes. Peak Tools' form handler is used as it ships, with no copy, since Peak Tools 9.3 (`^9.3` in `starter-kit.yaml`).
 
 ## Bard sets
 
@@ -194,24 +195,33 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
   the block wrapper applies `colour_scheme` to the whole section.
 - Cards: the buttons sit at the foot of each card (`mt-auto`), level across a row, and the image, title
   and text are stacked (`stack-6`, `stack-4`). The card text article is no longer `contents`.
-- Form: the heading field is `heading`, labelled Heading, like the other blocks. The template used to read
+- Form: the block (`page_builder/_form`) holds the heading, text and contact details; the form itself is Peak's form
+  component, `components/_form`, kept as close to Peak's as it can be. Its changes, listed in its header: it fills the
+  `critical_css` section and pushes `forms.js` and the captcha's script; it renders the captcha and seeds
+  `captcha-response` in `x-data`, because Precognition only submits the keys a form starts with (without it the token
+  never reached the server); required markers and errors use `--form-error`; and the consent label is for screen
+  readers only. When an upstream merge changes Peak's component, take theirs and repeat those changes.
+  The heading field is `heading`, labelled Heading, like the other blocks. The template used to read
   `title`, so the heading never showed, and the contact page content moved from `title` to `heading` with the fix.
   The heading and text sit together in a `header` (`gap-2`), and the form column is `stack-8`.
   Required markers and inline errors use `--form-error` from `colours.css`: red on Default and Light, white on
   Primary and a light red on Dark, so they stay readable on every scheme. The consent link hover uses
   `--btn-inline-hover-text` for the same reason, and the success message uses `heading-size-6`.
-- Form IDs: each Form block's IDs carry its form's handle, so two different forms can share a page. The
-  field views in `resources/views/vendor/statamic/forms/fields/` use Statamic's per-form `{{ id }}` (upstream
-  Peak uses the handle); `_form` uses `field:id` for labels and instructions and `block:form:handle` for the
-  error summary and honeypot; its error links rebuild Statamic's ID pattern, `{form}-form-{handle}-field` with
-  dots and underscores as hyphens (`RendersForms::generateFieldId()`, a private method, so recheck it after a
-  Statamic upgrade). `resources/views/vendor/statamic-peak-tools/snippets/_form_handler.antlers.html` is
-  Avoca's copy of the Peak Tools handler, changed only to find the summary inside its own form: when Peak
-  Tools changes its handler, copy it again and repeat that change. Keep all of this on upstream merges.
-- Forms 2 (Statamic 6.44): forms live in `resources/forms/{handle}.yaml` with their fields and an email connection; there
+- Form IDs are the field handles, as upstream Peak's are, in the field views and the form component alike, with one
+  `#summary`. Two forms on one page would share IDs; no kit page has two.
+- Success message and Thank-you page: both are in a form's settings. Peak Tools adds the required Success message
+  (Fields); `AppServiceProvider::bootFormRedirects()` adds the optional Thank-you page (After submission, its own
+  section because sections are keyed by name) and returns it through `Form::redirect()`, which Statamic checks first
+  on a successful submission. Peak Tools' handler follows the redirect. Statamic has no redirect setting of its own.
+- Form emails: the contact form's emails are Peak Tools' `peak_email` connection, whose views live in Peak Tools
+  (`peak-tools-email::form`), with each email's text in its Body. The kit has no `resources/views/email` and no
+  `form_email_config` fieldset, though upstream still ships both unused: leave them out after a merge, with the
+  `form_mail_*` strings.
+- Forms 2 (Statamic 6.44): forms live in `resources/forms/{handle}.yaml` with their fields and email connections; there
   are no form blueprints. The field views are named for the Forms 2 types. Statamic looks for a view named after a
   field's underlying fieldtype (`textarea`, `select`, `radio`, `text`…) before the Forms 2 name, so never add a view
-  under a Forms 1 name, or an upstream merge's: it would draw every Forms 2 type built on it.
+  under a Forms 1 name, or an upstream merge's: it would draw every Forms 2 type built on it. Upstream's
+  `time.antlers.html` (v22.6.0) is one: leave it out, as `time_picker` covers it.
 
 ## Site guidance and the AI block catalogue
 
@@ -229,7 +239,8 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
 - `AGENCY` in `.env` names the company running the project: a folder in `public/agencies` holding its
   `agency.json` (name and link) and logos: `logo.svg`, `logo-dark.svg` and `logo.png` for email. The install
   asks for it (`setAgency()`, or `AVOCA_AGENCY` for a script). Its logo stands in on the control panel
-  (`config/statamic/cp.php`), in form emails (`form_mail_logo` in `lang/*/strings.php`) and in the site header
+  (`config/statamic/cp.php`), in form emails (copied to the images container as `form-mail-logo.png`, the Configuration
+  global's Form mail logo) and in the site header
   (`components/_logo`) until the client's arrives, and signs the prototype. Peak's logo is gone from the kit;
   keep it out after an upstream merge. Honest Design has a placeholder logo until its own arrives.
 - `prototype/` is an empty discovery prototype: version 1 as content only, `data.js`, `pages.js` and `version.json`.

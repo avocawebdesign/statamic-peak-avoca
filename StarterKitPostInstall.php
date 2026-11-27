@@ -271,6 +271,9 @@ class StarterKitPostInstall
         }
 
         $this->replaceInEnv('AGENCY=avoca', "AGENCY={$agency}");
+
+        // Form emails show the Configuration global's Form mail logo, an asset in the images container.
+        app('files')->copy(public_path("agencies/{$agency}/logo.png"), public_path('images/form-mail-logo.png'));
     }
 
     protected function setAppUrl(): void

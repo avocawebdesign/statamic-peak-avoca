@@ -1,88 +1,75 @@
+honeypot_behavior: ignore
+success_message: 'Thank you, we received your message and will contact you as soon as possible.'
 title: Contact
-honeypot: fax
 fields:
-  sections:
+  pages:
     -
-      fields:
+      id: main
+      show_previous_button: false
+      sections:
         -
-          handle: name
-          field:
-            display: Name
-            type: name
-            validate:
-              - required
-              - 'min:2'
-            localizable: true
-            width: 66
-        -
-          handle: email
-          field:
-            display: 'Email address'
-            type: email
-            validate:
-              - required
-            localizable: true
-            width: 66
-        -
-          handle: message_body
-          field:
-            display: Message
-            type: long_answer
-            validate:
-              - required
-              - 'min:5'
-            localizable: true
-        -
-          handle: consent
-          field:
-            inline_label: 'I understand my details will be stored so you can get back to me.'
-            display: Consent
-            type: toggle
-            validate:
-              - accepted
-            visibility: hidden
+          fields:
+            -
+              handle: name
+              field:
+                display: Name
+                type: name
+                validate:
+                  - required
+                  - 'min:2'
+                localizable: true
+                width: 66
+            -
+              handle: email
+              field:
+                display: 'Email address'
+                type: email
+                validate:
+                  - required
+                localizable: true
+                width: 66
+            -
+              handle: message_body
+              field:
+                display: Message
+                type: long_answer
+                validate:
+                  - required
+                  - 'min:5'
+                localizable: true
+            -
+              handle: consent
+              field:
+                inline_label: 'I understand my details will be stored so you can get back to me.'
+                display: Consent
+                type: toggle
+                validate:
+                  - accepted
+                visibility: hidden
+honeypot: fax
 connections:
-  email:
+  peak_email:
     -
       id: iwArpANx
       to: '{{ site_details:email ?? config:mail:from:address }}'
       reply_to: 'field:email'
-      subject: '{{ trans:strings.form_subject_received }}: [[ name ]]'
-      html: email/form_owner
-      text: email/form_owner_text
+      subject: 'Contact form received: [[ name ]]'
+      body: 'A contact form has been sent.'
+      show_submitted_data: true
+      html: 'peak-tools-email::form'
+      text: 'peak-tools-email::form_text'
     -
       id: p0bMnaXJ
       to: 'field:email'
       reply_to: '{{ site_details:email ?? config:mail:from:address }}'
-      subject: '{{ trans:strings.form_subject_sent }}'
-      html: email/form_sender
-      text: email/form_sender_text
-content_sender:
-  show_submitted_data: false
-  email_text:
-    -
-      type: paragraph
-      content:
-        -
-          type: text
-          text: '{{ trans:strings.form_mail_greeting }} {{ first_name or name }},'
-    -
-      type: paragraph
-      content:
-        -
-          type: text
-          text: '{{ trans:strings.form_mail_body_sender }}'
-    -
-      type: paragraph
-      content:
-        -
-          type: text
-          text: '{{ trans:strings.form_mail_closing }},'
-    -
-      type: paragraph
-      content:
-        -
-          type: text
-          text: '{{ trans:strings.form_mail_from }}'
-content_owner:
-  show_submitted_data: true
+      subject: 'Contact form sent'
+      body: |-
+        ### Dear {{ first\_name or name }},
+
+        Thanks for your message. We will contact you as soon as possible.
+
+        Kind regards,\
+        {{ config:app:name }}
+      show_submitted_data: false
+      html: 'peak-tools-email::form'
+      text: 'peak-tools-email::form_text'

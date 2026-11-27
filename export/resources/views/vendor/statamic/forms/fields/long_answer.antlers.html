@@ -9,11 +9,11 @@
         'border-gray-800 focus:border-primary': !form.invalid('{{ handle }}')
     }"
     class="w-full h-32 rounded-sm caret-primary field-sizing-content"
-    id="{{ id }}"
+    id="{{ handle }}"
     name="{{ handle }}"
     rows="5"
     {{ placeholder ?= 'placeholder="{placeholder}"' }}
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
     {{ character_limit ?= 'maxlength="{character_limit}"' }}
     {{ autocomplete ?= 'autocomplete="{autocomplete}"' }}
 >{{ old }}</textarea>

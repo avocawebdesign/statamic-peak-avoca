@@ -18,8 +18,8 @@
     }"
     :aria-invalid="form.invalid('{{ handle }}')"
     class="flex w-full max-w-md flex-col gap-2"
-    id="{{ id }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    id="{{ handle }}"
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
 >
     <template x-for="(item, index) in items" :key="item">
         <li

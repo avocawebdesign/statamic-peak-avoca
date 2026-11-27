@@ -4,8 +4,8 @@
 <fieldset
     :aria-invalid="form.invalid('{{ handle }}')"
     class="w-full max-w-xl"
-    id="{{ id }}"
-    {{ instructions ?= 'aria-describedBy="{id}-instructions"' }}
+    id="{{ handle }}"
+    {{ instructions ?= 'aria-describedBy="{handle}-instructions"' }}
 >
     <div class="flex">
         {{ foreach:scale_values as="scale_value" }}

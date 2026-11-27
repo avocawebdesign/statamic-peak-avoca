@@ -1,5 +1,33 @@
 # Changelog
 
+## Avoca (2026-11-27)
+
+### What's new
+- Peak v22.6.0 and v22.6.1 merged: Peak's form component, `components/_form`, renders the form, and the Form block keeps its heading, text and contact details around it. The component is Peak's with the kit's few changes, listed in its header.
+- A form's settings carry Peak Tools' Success message and a Thank-you page (After submission). With a Thank-you page set, a successful submission goes there.
+- The contact form's emails are Peak Tools' `peak_email` connection, with each email's text in its Body. The logo comes from the Configuration global's Form mail logo, which the install sets to the agency's `logo.png`.
+
+### What's changed
+- New sites require Peak Tools `^9.3`, for its email connection, Success message and redirect handling. Its form handler is used as it ships; the kit's copy is gone.
+- Form field IDs are the field handles, as upstream's are, rather than Statamic's per-form IDs.
+- `resources/views/email`, the `form_email_config` fieldset and the `form_mail_*`, `form_send`, `form_success` and `form_honeypot` strings are gone; the submit button reads Statamic's label, Submit.
+
+### What's fixed
+- The captcha's token reaches the server. Precognition only submits the keys a form starts with, and `captcha-response` wasn't one, so a contact form with Turnstile keys set rejected every submission.
+
+## v22.6.1 (2026-11-27)
+
+### What's improved
+- Support image choice field. 5b203bbf by @robdekort
+
+## v22.6.0 (2026-11-26)
+
+### What's new
+- Support for Forms 2. Added new fieldtypes support: currency, dictionary, opinion_scale, ranking, time
+- Moved form-rendering into its own reusable component
+
+Info: If you want to use the new PeakEmail form connector make sure you add a new asset field 'form_mail_logo' to your configuration global. It will be used for the email views that have been moved to the peak-tools package. You can safely remove the old views or publish the new ones to make changes.
+
 ## Avoca (2026-11-25)
 
 ### What's new
