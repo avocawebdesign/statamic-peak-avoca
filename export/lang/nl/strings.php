@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Er zijn problemen met je formulierinput. Probeer het opnieuw.',
     'form_required' => 'Verplicht',
+    'form_send' => 'Verstuur',
 
     // Consent banner
     'consent_accept_all' => 'Accepteer alles',

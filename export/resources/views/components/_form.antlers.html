@@ -2,9 +2,11 @@
     @name Form
     @desc The form component. Peak's (v22.6.1) with Avoca's changes: critical-forms.css, forms.js and the captcha's
           script for pages with a form; the captcha, whose token is seeded in x-data because Precognition only submits
-          the keys a form starts with; required markers and errors in --form-error, which each colour scheme sets; and a
-          consent field's label for screen readers only, as its statement is the inline label. A form's Thank-you page
-          (form settings, After submission) comes back as the redirect Peak Tools' form handler follows.
+          the keys a form starts with; required markers and errors in --form-error, which each colour scheme sets; a
+          consent field's label for screen readers only, as its statement is the inline label; and the button reads
+          strings.form_send ("Send message"), as without Forms Pro Statamic's form_button_label is always "Submit".
+          A form's Thank-you page (form settings, After submission) comes back as the redirect Peak Tools' form
+          handler follows.
     @param form_handle The form handle of the form you want to render.
     @param redirect Optionally set a link where the user should be redirected to after a successful submission
 #}}
@@ -128,7 +130,7 @@
             {{# Submit button, disabled on processing. #}}
             <div class="w-full flex justify-end">
                 <div class="md:col-span-12 flex justify-end">
-                    {{ partial:components/button as="button" button_type="button" :label="form_button_label" }}
+                    {{ partial:components/button as="button" button_type="button" label="{ trans:strings.form_send }" }}
                         {{ slot:attributes }}
                             @click.prevent="submit" :disabled="form.processing" :class="{ 'opacity-25 cursor-default': form.processing }"
                         {{ /slot:attributes }}

@@ -10,7 +10,7 @@
 ### What's changed
 - New sites require Peak Tools `^9.3`, for its email connection, Success message and redirect handling. Its form handler is used as it ships; the kit's copy is gone.
 - Form field IDs are the field handles, as upstream's are, rather than Statamic's per-form IDs.
-- `resources/views/email`, the `form_email_config` fieldset and the `form_mail_*`, `form_send`, `form_success` and `form_honeypot` strings are gone; the submit button reads Statamic's label, Submit.
+- `resources/views/email`, the `form_email_config` fieldset and the `form_mail_*`, `form_success` and `form_honeypot` strings are gone. The submit button still reads `form_send`, Send message: without Forms Pro, Statamic's own label is always Submit.
 
 ### What's fixed
 - The captcha's token reaches the server. Precognition only submits the keys a form starts with, and `captcha-response` wasn't one, so a contact form with Turnstile keys set rejected every submission.

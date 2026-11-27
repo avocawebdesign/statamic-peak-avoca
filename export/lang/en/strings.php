@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'There are problems with your form input:',
     'form_required' => 'Required',
+    'form_send' => 'Send message',
 
     // Consent banner
     'consent_accept_all' => 'Accept all',

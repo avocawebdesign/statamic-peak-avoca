@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Bei der Eingabe in Ihr Formular sind Fehler aufgetreten. Bitte beheben Sie diese und versuchen Sie es erneut.',
     'form_required' => 'Pflichtfeld',
+    'form_send' => 'Send melding',
 
     // Cookie banner
     'consent_title' => 'Informasjonskapslar 🍪',

@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Der er problemer med dine indtastninger i formularen:',
     'form_required' => 'Obligatorisk felt',
+    'form_send' => 'Send besked',
 
     // Cookie banner
     'consent_accept' => 'Acceptere',

@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Es sind Probleme bei einigen Formularfeldern aufgetreten:',
     'form_required' => 'Pflichtfeld',
+    'form_send' => 'Senden',
 
     // Cookie banner
     'consent_accept_all' => 'Alle akzeptieren',

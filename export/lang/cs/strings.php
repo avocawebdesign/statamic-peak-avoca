@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Ve vašem formuláři jsou chyby. Opravte je a zkuste to znovu.',
     'form_required' => 'Povinné pole',
+    'form_send' => 'Poslat zprávu',
 
     // Cookie banner
     'consent_accept_all' => 'Přijmout vše',

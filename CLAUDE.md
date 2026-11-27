@@ -199,8 +199,9 @@ This is Avoca's fork of studio1902/statamic-peak. `upstream` is the Peak remote;
   component, `components/_form`, kept as close to Peak's as it can be. Its changes, listed in its header: it fills the
   `critical_css` section and pushes `forms.js` and the captcha's script; it renders the captcha and seeds
   `captcha-response` in `x-data`, because Precognition only submits the keys a form starts with (without it the token
-  never reached the server); required markers and errors use `--form-error`; and the consent label is for screen
-  readers only. When an upstream merge changes Peak's component, take theirs and repeat those changes.
+  never reached the server); required markers and errors use `--form-error`; the consent label is for screen
+  readers only; and the button reads `strings.form_send` (Send message), kept in every language's `strings.php` when an
+  upstream merge removes it, since without Forms Pro Statamic's `form_button_label` is always Submit. When an upstream merge changes Peak's component, take theirs and repeat those changes.
   The heading field is `heading`, labelled Heading, like the other blocks. The template used to read
   `title`, so the heading never showed, and the contact page content moved from `title` to `heading` with the fix.
   The heading and text sit together in a `header` (`gap-2`), and the form column is `stack-8`.

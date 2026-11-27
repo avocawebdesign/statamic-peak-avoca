@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Det er feil med skjemaet ditt. Reparer dem og prøv igjen.',
     'form_required' => 'Obligatorisk felt',
+    'form_send' => 'Send melding',
 
 
     // Cookie banner

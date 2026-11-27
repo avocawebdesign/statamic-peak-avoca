@@ -4,6 +4,7 @@ return [
     // Forms
     'form_error' => 'Hay problemas con los datos del formulario:',
     'form_required' => 'Obligatorio',
+    'form_send' => 'Enviar mensaje',
 
     // Consent banner
     'consent_accept_all' => 'Aceptar todo',
